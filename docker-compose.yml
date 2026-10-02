@@ -115,6 +115,26 @@ services:
     networks: [monitor_net, db_net]
     depends_on:
       db: { condition: service_healthy }
+  loki:
+    image: grafana/loki:3.0.0
+    container_name: tour_loki
+    restart: unless-stopped
+    command: -config.file=/etc/loki/loki-config.yml
+    volumes:
+      - ./loki/loki-config.yml:/etc/loki/loki-config.yml:ro
+      - loki_data:/loki
+    networks: [monitor_net]
+
+  promtail:
+    image: grafana/promtail:3.0.0
+    container_name: tour_promtail
+    restart: unless-stopped
+    command: -config.file=/etc/promtail/promtail-config.yml
+    volumes:
+      - ./promtail/promtail-config.yml:/etc/promtail/promtail-config.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks: [monitor_net]
+    depends_on: [loki]
 
 networks:
   web_net:
@@ -126,3 +146,4 @@ volumes:
   db_data:
   prom_data:
   grafana_data:
+  loki_data:

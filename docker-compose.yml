@@ -64,6 +64,57 @@ services:
     depends_on: [app]
     cap_drop: [ALL]
     security_opt: ["no-new-privileges:true"]
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: tour_prometheus
+    restart: unless-stopped
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prom_data:/prometheus
+    ports: ["127.0.0.1:9090:9090"]
+    networks: [monitor_net]
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: tour_grafana
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+    ports: ["3001:3000"]
+    networks: [monitor_net]
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    container_name: tour_cadvisor
+    restart: unless-stopped
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks: [monitor_net]
+
+  nginx-exporter:
+    image: nginx/nginx-prometheus-exporter:latest
+    container_name: tour_nginx_exporter
+    restart: unless-stopped
+    command: ["--nginx.scrape-uri=http://nginx:8081/stub_status"]
+    networks: [monitor_net]
+    depends_on: [nginx]
+
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:latest
+    container_name: tour_pg_exporter
+    restart: unless-stopped
+    environment:
+      DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?sslmode=disable"
+    networks: [monitor_net, db_net]
+    depends_on:
+      db: { condition: service_healthy }
 
 networks:
   web_net:
@@ -73,3 +124,5 @@ networks:
 
 volumes:
   db_data:
+  prom_data:
+  grafana_data:

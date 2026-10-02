@@ -1,0 +1,19 @@
+<%- include('partials/head') %>
+<h1><%= tour.name %></h1>
+<p>Điểm đến: <%= tour.destination %> | <%= tour.days %> ngày | Giá: <%= Number(tour.price).toLocaleString('vi-VN') %> đ</p>
+<h3>Lịch trình</h3>
+<p><%= tour.itinerary %></p>
+<a href="/tours/<%= tour.id %>/edit">Sửa</a>
+<form class="inline" method="post" action="/tours/<%= tour.id %>/delete" onsubmit="return confirm('Xóa tour này?')">
+  <button>Xóa</button>
+</form>
+<hr>
+<h3>Đặt tour</h3>
+<form method="post" action="/tours/<%= tour.id %>/book">
+  Họ tên <input name="full_name" required>
+  Email <input name="email" type="email" required>
+  Số điện thoại <input name="phone">
+  Số người <input name="people" type="number" min="1" value="1" required>
+  <button>Đặt tour</button>
+</form>
+<%- include('partials/foot') %>

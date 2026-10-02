@@ -1,0 +1,13 @@
+<%- include('partials/head') %>
+<h1>Đơn đặt tour</h1>
+<table>
+  <tr><th>#</th><th>Tour</th><th>Khách hàng</th><th>Email</th><th>SĐT</th><th>Số người</th><th>Trạng thái</th><th></th></tr>
+  <% bookings.forEach(b => { %>
+  <tr>
+    <td><%= b.id %></td><td><%= b.tour_name %></td><td><%= b.full_name %></td>
+    <td><%= b.email %></td><td><%= b.phone %></td><td><%= b.people %></td><td><%= b.status %></td>
+    <td><form method="post" action="/bookings/<%= b.id %>/delete" onsubmit="return confirm('Hủy đơn?')"><button>Hủy</button></form></td>
+  </tr>
+  <% }) %>
+</table>
+<%- include('partials/foot') %>

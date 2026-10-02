@@ -1,0 +1,12 @@
+<%- include('partials/head') %>
+<h1><%= title %></h1>
+<form method="post" action="<%= action %>">
+  Tên tour <input name="name" value="<%= tour.name || '' %>" required>
+  Điểm đến <input name="destination" value="<%= tour.destination || '' %>" required>
+  Giá (đ) <input name="price" type="number" value="<%= tour.price || '' %>" required>
+  Số ngày <input name="days" type="number" value="<%= tour.days || '' %>" required>
+  Số chỗ <input name="seats" type="number" value="<%= tour.seats || 20 %>" required>
+  Lịch trình <textarea name="itinerary" rows="5"><%= tour.itinerary || '' %></textarea>
+  <button>Lưu</button>
+</form>
+<%- include('partials/foot') %>

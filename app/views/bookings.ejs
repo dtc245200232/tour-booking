@@ -1,13 +1,73 @@
-<%- include('partials/head') %>
-<h1>Đơn đặt tour</h1>
-<table>
-  <tr><th>#</th><th>Tour</th><th>Khách hàng</th><th>Email</th><th>SĐT</th><th>Số người</th><th>Trạng thái</th><th></th></tr>
-  <% bookings.forEach(b => { %>
-  <tr>
-    <td><%= b.id %></td><td><%= b.tour_name %></td><td><%= b.full_name %></td>
-    <td><%= b.email %></td><td><%= b.phone %></td><td><%= b.people %></td><td><%= b.status %></td>
-    <td><form method="post" action="/bookings/<%= b.id %>/delete" onsubmit="return confirm('Hủy đơn?')"><button>Hủy</button></form></td>
-  </tr>
-  <% }) %>
-</table>
-<%- include('partials/foot') %>
+<%- include('partials/head', { active: 'bookings' , title: 'Đơn đặt tour' }) %>
+  <div class="page-head">
+    <h1>Đơn đặt tour (<%= bookings.length %>)</h1>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <tr>
+        <th>#</th>
+        <th>Tour</th>
+        <th>Khách hàng</th>
+        <th>Liên hệ</th>
+        <th>Số người</th>
+        <th>Ngày đi</th>
+        <th>Tổng tiền</th>
+        <th>Ngày đặt</th>
+        <th>Trạng thái</th>
+        <th>Actions</th>
+      </tr>
+      <% if (!bookings.length) { %>
+        <tr>
+          <td colspan="10" class="empty">Chưa có đơn đặt tour nào.</td>
+        </tr>
+        <% } %>
+          <% bookings.forEach(b=> { %>
+            <tr>
+              <td>
+                <%= b.id %>
+              </td>
+              <td><a href="/tours/<%= b.tour_id %>">
+                  <%= b.tour_name %>
+                </a></td>
+              <td>
+                <%= b.full_name %>
+              </td>
+              <td>
+                <%= b.email %><br><span class="meta">
+                    <%= b.phone %>
+                  </span>
+              </td>
+              <td>
+                <%= b.people %>
+              </td>
+              <td class="nowrap">
+                <%= b.travel_fmt || '—' %>
+              </td>
+              <td class="nowrap">
+                <%= money(b.price * b.people) %>
+              </td>
+              <td class="nowrap">
+                <%= new Date(b.created_at).toLocaleDateString('vi-VN') %>
+              </td>
+              <td><span class="badge <%= b.status %>">
+                  <%= bstatus[b.status] %>
+                </span></td>
+              <td class="nowrap">
+                <form class="inline" method="post" action="/bookings/<%= b.id %>/status">
+                  <input type="hidden" name="status" value="confirmed">
+                  <button class="ic" title="Xác nhận">✔</button>
+                </form>
+                <form class="inline" method="post" action="/bookings/<%= b.id %>/status" data-confirm="Hủy đơn này?">
+                  <input type="hidden" name="status" value="cancelled">
+                  <button class="ic del" title="Hủy đơn">✖</button>
+                </form>
+                <form class="inline" method="post" action="/bookings/<%= b.id %>/delete"
+                  data-confirm="Xóa hẳn đơn này?">
+                  <button class="ic del" title="Xóa">🗑</button>
+                </form>
+              </td>
+            </tr>
+            <% }) %>
+    </table>
+  </div>
+  <%- include('partials/foot') %>

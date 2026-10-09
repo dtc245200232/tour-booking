@@ -1,0 +1,9 @@
+.env
+nginx/certs/
+node_modules/
+npm-debug.log
+.DS_Store
+db_data/
+prom_data/
+grafana_data/
+loki_data/

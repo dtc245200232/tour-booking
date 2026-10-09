@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Đăng nhập - Tour Booking</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body class="auth-body">
+    <div class="auth-card">
+        <div class="brand" style="justify-content:center"><span>🌏</span> Tour Booking</div>
+        <h2>Đăng nhập</h2>
+        <% if (error) { %>
+            <div class="alert err">
+                <%= error %>
+            </div>
+            <% } %>
+                <form method="post" action="/login">
+                    <label>Email</label>
+                    <input name="email" type="email" value="<%= email %>" required autofocus>
+                    <label>Mật khẩu</label>
+                    <input name="password" type="password" required>
+                    <button class="btn btn-block">Đăng nhập</button>
+                </form>
+                <p class="meta" style="text-align:center;margin-top:14px">Chưa có tài khoản? <a href="/register">Đăng
+                        ký</a></p>
+    </div>
+</body>
+
+</html>

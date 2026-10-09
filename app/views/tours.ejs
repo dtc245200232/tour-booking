@@ -1,0 +1,74 @@
+<%- include('partials/head', { active: 'tours' , title: 'Quản lý Tour du lịch' }) %>
+    <div class="page-head">
+        <h1>Quản lý Tour du lịch</h1>
+    </div>
+    <div class="toolbar">
+        <a class="btn" href="/tours/new">＋ Thêm Tour Mới</a>
+        <div class="tools">
+            <input id="search" type="search" placeholder="Tìm theo tên tour...">
+            <select id="dest">
+                <option value="">Lọc theo điểm đến</option>
+                <% [...new Set(tours.map(t=> t.destination))].forEach(x => { %>
+                    <option value="<%= x %>">
+                        <%= x %>
+                    </option>
+                    <% }) %>
+            </select>
+        </div>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <tr>
+                <th>Tour ID</th>
+                <th>Tour Name</th>
+                <th>Destination</th>
+                <th>Duration</th>
+                <th>Price</th>
+                <th>Seats left</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+            <% if (!tours.length) { %>
+                <tr>
+                    <td colspan="8" class="empty">Chưa có tour nào.</td>
+                </tr>
+                <% } %>
+                    <% tours.forEach(t=> { %>
+                        <tr class="row" data-name="<%= (t.name + ' ' + t.destination).toLowerCase() %>"
+                            data-dest="<%= t.destination %>">
+                            <td class="nowrap">
+                                <%= code(t.id) %>
+                            </td>
+                            <td><a href="/tours/<%= t.id %>">
+                                    <%= t.name %>
+                                </a></td>
+                            <td>
+                                <%= t.destination %>
+                            </td>
+                            <td>
+                                <%= dur(t.days) %>
+                            </td>
+                            <td class="nowrap">
+                                <%= money(t.price) %>
+                            </td>
+                            <td>
+                                <%= t.seats_left %>
+                            </td>
+                            <td><span class="badge <%= t.status %>">
+                                    <%= t.status==='active' ? 'Active' : 'Inactive' %>
+                                </span></td>
+                            <td class="nowrap">
+                                <a class="ic" href="/tours/<%= t.id %>/edit" title="Sửa">✏️</a>
+                                <form class="inline" method="post" action="/tours/<%= t.id %>/delete"
+                                    data-confirm="Xóa tour này?">
+                                    <button class="ic del" title="Xóa">🗑</button>
+                                </form>
+                                <form class="inline" method="post" action="/tours/<%= t.id %>/duplicate">
+                                    <button class="ic" title="Nhân bản">⧉</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <% }) %>
+        </table>
+    </div>
+    <%- include('partials/foot') %>

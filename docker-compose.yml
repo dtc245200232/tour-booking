@@ -41,6 +41,9 @@ services:
       DB_USER: tour_app
       DB_PASSWORD: ${APP_DB_PASSWORD}
       DB_NAME: ${POSTGRES_DB}
+      SESSION_SECRET: ${SESSION_SECRET}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
     networks: [web_net, db_net, monitor_net]
     depends_on:
       db: { condition: service_healthy }

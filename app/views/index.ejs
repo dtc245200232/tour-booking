@@ -1,9 +1,0 @@
-<%- include('partials/head') %>
-<h1>Tour du lịch</h1>
-<% tours.forEach(t => { %>
-  <div class="card">
-    <h3><a href="/tours/<%= t.id %>"><%= t.name %></a></h3>
-    <p>Điểm đến: <%= t.destination %> | <%= t.days %> ngày | Giá: <%= Number(t.price).toLocaleString('vi-VN') %> đ | Còn <%= t.seats %> chỗ</p>
-  </div>
-<% }) %>
-<%- include('partials/foot') %>

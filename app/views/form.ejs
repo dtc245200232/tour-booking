@@ -1,12 +1,30 @@
-<%- include('partials/head') %>
-<h1><%= title %></h1>
-<form method="post" action="<%= action %>">
-  Tên tour <input name="name" value="<%= tour.name || '' %>" required>
-  Điểm đến <input name="destination" value="<%= tour.destination || '' %>" required>
-  Giá (đ) <input name="price" type="number" value="<%= tour.price || '' %>" required>
-  Số ngày <input name="days" type="number" value="<%= tour.days || '' %>" required>
-  Số chỗ <input name="seats" type="number" value="<%= tour.seats || 20 %>" required>
-  Lịch trình <textarea name="itinerary" rows="5"><%= tour.itinerary || '' %></textarea>
-  <button>Lưu</button>
-</form>
-<%- include('partials/foot') %>
+<%- include('partials/head', { active: 'tours' , title: title }) %>
+  <div class="page-head">
+    <h1>
+      <%= title %>
+    </h1>
+  </div>
+  <div class="form-wrap panel">
+    <form method="post" action="<%= action %>">
+      <label>Tên tour</label><input name="name" value="<%= tour.name || '' %>" required>
+      <div class="form-grid">
+        <div><label>Điểm đến</label><input name="destination" value="<%= tour.destination || '' %>" required></div>
+        <div><label>Giá (₫ / người)</label><input name="price" type="number" min="0" value="<%= tour.price || '' %>"
+            required></div>
+        <div><label>Số ngày</label><input name="days" type="number" min="1" value="<%= tour.days || '' %>" required>
+        </div>
+        <div><label>Số chỗ</label><input name="seats" type="number" min="1" value="<%= tour.seats || 20 %>" required>
+        </div>
+      </div>
+      <label>Trạng thái</label>
+      <select name="status">
+        <option value="active" <%=tour.status !=='inactive' ? 'selected' : '' %>>Active</option>
+        <option value="inactive" <%=tour.status==='inactive' ? 'selected' : '' %>>Inactive</option>
+      </select>
+      <label>Lịch trình (viết dạng: Ngày 1: ... Ngày 2: ...)</label>
+      <textarea name="itinerary" rows="6"><%= tour.itinerary || '' %></textarea>
+      <button class="btn">💾 Lưu tour</button>
+      <a class="btn btn-ghost" href="/tours">Hủy</a>
+    </form>
+  </div>
+  <%- include('partials/foot') %>

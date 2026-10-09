@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Đăng ký - Tour Booking</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body class="auth-body">
+    <div class="auth-card">
+        <div class="brand" style="justify-content:center"><span>🌏</span> Tour Booking</div>
+        <h2>Đăng ký khách hàng</h2>
+        <% if (error) { %>
+            <div class="alert err">
+                <%= error %>
+            </div>
+            <% } %>
+                <form method="post" action="/register">
+                    <label>Họ tên</label>
+                    <input name="full_name" value="<%= form.full_name || '' %>" required autofocus>
+                    <label>Email</label>
+                    <input name="email" type="email" value="<%= form.email || '' %>" required>
+                    <label>Số điện thoại</label>
+                    <input name="phone" value="<%= form.phone || '' %>">
+                    <label>Mật khẩu (tối thiểu 8 ký tự)</label>
+                    <input name="password" type="password" minlength="8" required>
+                    <button class="btn btn-block">Tạo tài khoản</button>
+                </form>
+                <p class="meta" style="text-align:center;margin-top:14px">Đã có tài khoản? <a href="/login">Đăng
+                        nhập</a></p>
+    </div>
+</body>
+
+</html>

@@ -1,3 +1,13 @@
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  full_name VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  phone VARCHAR(20),
+  password_hash VARCHAR(100) NOT NULL,
+  role VARCHAR(10) NOT NULL DEFAULT 'customer',
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
 CREATE TABLE tours (
   id SERIAL PRIMARY KEY,
   name VARCHAR(200) NOT NULL,
@@ -5,7 +15,8 @@ CREATE TABLE tours (
   price NUMERIC(12,0) NOT NULL,
   days INT NOT NULL,
   seats INT NOT NULL DEFAULT 20,
-  itinerary TEXT
+  itinerary TEXT,
+  status VARCHAR(10) NOT NULL DEFAULT 'active'
 );
 
 CREATE TABLE customers (
@@ -19,6 +30,8 @@ CREATE TABLE bookings (
   id SERIAL PRIMARY KEY,
   tour_id INT REFERENCES tours(id) ON DELETE CASCADE,
   customer_id INT REFERENCES customers(id) ON DELETE CASCADE,
+  user_id INT REFERENCES users(id) ON DELETE SET NULL,
+  travel_date DATE,
   people INT NOT NULL DEFAULT 1,
   status VARCHAR(20) DEFAULT 'pending',
   created_at TIMESTAMPTZ DEFAULT now()

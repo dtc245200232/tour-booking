@@ -1,0 +1,123 @@
+<%- include('partials/head', { active: 'dashboard' , title: 'Dashboard' }) %>
+  <div class="page-head">
+    <h1>Dashboard</h1>
+  </div>
+
+  <% if (user.role==='admin' ) { %>
+    <div class="stats">
+      <div class="stat">
+        <div class="n">
+          <%= stats.tours %>
+        </div>
+        <div class="l">Tổng số tour</div>
+      </div>
+      <div class="stat">
+        <div class="n">
+          <%= stats.active_tours %>
+        </div>
+        <div class="l">Tour đang mở bán</div>
+      </div>
+      <div class="stat">
+        <div class="n">
+          <%= stats.customers %>
+        </div>
+        <div class="l">Số khách hàng</div>
+      </div>
+      <div class="stat">
+        <div class="n">
+          <%= stats.bookings %>
+        </div>
+        <div class="l">Đơn đặt tour</div>
+      </div>
+      <div class="stat">
+        <div class="n">
+          <%= stats.pending %>
+        </div>
+        <div class="l">Đơn chờ xác nhận</div>
+      </div>
+      <div class="stat">
+        <div class="n">
+          <%= money(stats.revenue) %>
+        </div>
+        <div class="l">Doanh thu (đơn đã xác nhận)</div>
+      </div>
+    </div>
+    <% } else { %>
+      <div class="stats">
+        <div class="stat">
+          <div class="n">
+            <%= tours.length %>
+          </div>
+          <div class="l">Tour đang mở bán</div>
+        </div>
+        <div class="stat">
+          <div class="n">
+            <%= stats.my_total %>
+          </div>
+          <div class="l">Đơn bạn đã đặt</div>
+        </div>
+        <div class="stat">
+          <div class="n">
+            <%= stats.my_upcoming %>
+          </div>
+          <div class="l">Tour sắp tới</div>
+        </div>
+        <div class="stat">
+          <div class="n">
+            <%= stats.my_done %>
+          </div>
+          <div class="l">Tour đã qua</div>
+        </div>
+      </div>
+      <% } %>
+
+        <div class="panel">
+          <div class="toolbar" style="margin-bottom:12px">
+            <h3 style="margin:0">Tour đang mở bán (<%= tours.length %>)</h3>
+            <% if (user.role==='admin' ) { %><a class="btn btn-ghost" href="/tours">Quản lý tour</a>
+              <% } %>
+          </div>
+          <% if (!tours.length) { %>
+            <p class="empty">Chưa có tour nào đang mở bán.</p>
+            <% } else { %>
+              <div class="table-wrap">
+                <table>
+                  <tr>
+                    <th>Tour ID</th>
+                    <th>Tên tour</th>
+                    <th>Điểm đến</th>
+                    <th>Thời lượng</th>
+                    <th>Giá</th>
+                    <th>Chỗ còn lại</th>
+                    <th></th>
+                  </tr>
+                  <% tours.forEach(t=> { %>
+                    <tr>
+                      <td class="nowrap">
+                        <%= code(t.id) %>
+                      </td>
+                      <td><a href="/tours/<%= t.id %>">
+                          <%= t.name %>
+                        </a></td>
+                      <td>
+                        <%= t.destination %>
+                      </td>
+                      <td>
+                        <%= dur(t.days) %>
+                      </td>
+                      <td class="nowrap">
+                        <%= money(t.price) %>
+                      </td>
+                      <td>
+                        <%= t.seats_left %>
+                      </td>
+                      <td><a class="btn btn-ghost" href="/tours/<%= t.id %>">
+                          <%= user.role==='admin' ? 'Xem' : 'Đặt tour' %>
+                        </a></td>
+                    </tr>
+                    <% }) %>
+                </table>
+              </div>
+              <% } %>
+        </div>
+        <%- include('partials/foot') %>

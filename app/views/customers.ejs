@@ -1,0 +1,44 @@
+<%- include('partials/head', { active: 'customers' , title: 'Khách hàng' }) %>
+    <div class="page-head">
+        <h1>Khách hàng (<%= customers.length %>)</h1>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <tr>
+                <th>#</th>
+                <th>Họ tên</th>
+                <th>Email</th>
+                <th>Số điện thoại</th>
+                <th>Ngày đăng ký</th>
+                <th>Số đơn</th>
+            </tr>
+            <% if (!customers.length) { %>
+                <tr>
+                    <td colspan="6" class="empty">Chưa có khách hàng đăng ký.</td>
+                </tr>
+                <% } %>
+                    <% customers.forEach(c=> { %>
+                        <tr>
+                            <td>
+                                <%= c.id %>
+                            </td>
+                            <td>
+                                <%= c.full_name %>
+                            </td>
+                            <td>
+                                <%= c.email %>
+                            </td>
+                            <td>
+                                <%= c.phone %>
+                            </td>
+                            <td>
+                                <%= c.joined %>
+                            </td>
+                            <td>
+                                <%= c.total %>
+                            </td>
+                        </tr>
+                        <% }) %>
+        </table>
+    </div>
+    <%- include('partials/foot') %>

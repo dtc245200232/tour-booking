@@ -1,14 +1,43 @@
 <!DOCTYPE html>
-<html lang="vi"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tour Booking</title>
-<style>
-body{font-family:Arial,sans-serif;max-width:960px;margin:auto;padding:16px;color:#222}
-nav a{margin-right:12px;text-decoration:none;color:#0a58ca;font-weight:bold}
-.card{border:1px solid #ddd;border-radius:8px;padding:12px;margin:10px 0}
-input,textarea{width:100%;padding:6px;margin:4px 0 10px;box-sizing:border-box}
-button{padding:6px 14px;cursor:pointer}
-table{width:100%;border-collapse:collapse}td,th{border:1px solid #ddd;padding:6px}
-.inline{display:inline}
-</style></head><body>
-<nav><a href="/">Danh sách tour</a><a href="/tours/new">+ Thêm tour</a><a href="/bookings">Đơn đặt tour</a></nav><hr>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+        <%= title %> - Tour Booking
+    </title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/app.js" defer></script>
+</head>
+
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="brand"><span>🌏</span> Tour Booking</div>
+            <nav class="menu">
+                <a href="/" class="<%= active === 'dashboard' ? 'active' : '' %>">📊 Dashboard</a>
+                <% if (user && user.role==='admin' ) { %>
+                    <a href="/tours" class="<%= active === 'tours' ? 'active' : '' %>">🧭 Quản lý Tour du lịch</a>
+                    <a href="/bookings" class="<%= active === 'bookings' ? 'active' : '' %>">🗓️ Đơn đặt tour</a>
+                    <a href="/customers" class="<%= active === 'customers' ? 'active' : '' %>">👥 Khách hàng</a>
+                    <% } else { %>
+                        <a href="/my-bookings" class="<%= active === 'my-bookings' ? 'active' : '' %>">🎫 Tour đã
+                            đặt</a>
+                        <% } %>
+                            <a href="/settings" class="<%= active === 'settings' ? 'active' : '' %>">⚙️ Cài đặt</a>
+            </nav>
+        </aside>
+        <div class="content">
+            <header class="topbar">
+                <div class="userbox">
+                    <span>
+                        <%= user.name %>
+                    </span>
+                    <span class="role-tag">
+                        <%= user.role==='admin' ? 'Quản trị viên' : 'Khách hàng' %>
+                    </span>
+                    <form method="post" action="/logout" class="inline"><button class="logout">Đăng xuất</button></form>
+                </div>
+            </header>
+            <main class="page">

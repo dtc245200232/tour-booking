@@ -1,0 +1,51 @@
+<%- include('partials/head', { active: 'settings' , title: 'Cài đặt' }) %>
+    <div class="page-head">
+        <h1>Cài đặt</h1>
+    </div>
+    <% if (msg) { %>
+        <div class="alert ok">
+            <%= msg %>
+        </div>
+        <% } %>
+            <% if (err) { %>
+                <div class="alert err">
+                    <%= err %>
+                </div>
+                <% } %>
+
+                    <div class="panel" style="max-width:640px">
+                        <h3>Thông tin tài khoản</h3>
+                        <form method="post" action="/settings/profile">
+                            <label>Email (không đổi được)</label>
+                            <input value="<%= me.email %>" disabled>
+                            <label>Họ tên</label>
+                            <input name="full_name" value="<%= me.full_name %>" required>
+                            <label>Số điện thoại</label>
+                            <input name="phone" value="<%= me.phone || '' %>">
+                            <button class="btn">Lưu thông tin</button>
+                        </form>
+                    </div>
+
+                    <div class="panel" style="max-width:640px">
+                        <h3>Đổi mật khẩu</h3>
+                        <form method="post" action="/settings/password">
+                            <label>Mật khẩu hiện tại</label>
+                            <input name="old_password" type="password" required>
+                            <label>Mật khẩu mới (tối thiểu 8 ký tự)</label>
+                            <input name="new_password" type="password" minlength="8" required>
+                            <button class="btn">Đổi mật khẩu</button>
+                        </form>
+                    </div>
+
+                    <% if (user.role==='admin' ) { %>
+                        <h3>Công cụ hệ thống</h3>
+                        <div class="links">
+                            <a class="linkcard" href="http://localhost:5050" target="_blank" rel="noopener"><b>🐘
+                                    pgAdmin</b><span class="meta">Quản lý PostgreSQL (cổng 5050)</span></a>
+                            <a class="linkcard" href="http://localhost:3001" target="_blank" rel="noopener"><b>📈
+                                    Grafana</b><span class="meta">Dashboard giám sát và log (cổng 3001)</span></a>
+                            <a class="linkcard" href="http://localhost:9090" target="_blank" rel="noopener"><b>🔥
+                                    Prometheus</b><span class="meta">Metrics và targets (cổng 9090)</span></a>
+                        </div>
+                        <% } %>
+                            <%- include('partials/foot') %>

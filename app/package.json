@@ -2,8 +2,12 @@
   "name": "tour-booking",
   "version": "1.0.0",
   "main": "server.js",
-  "scripts": { "start": "node server.js" },
+  "scripts": {
+    "start": "node server.js"
+  },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-session": "^2.1.0",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "morgan": "^1.10.0",

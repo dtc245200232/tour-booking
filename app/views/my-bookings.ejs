@@ -1,0 +1,66 @@
+<%- include('partials/head', { active: 'my-bookings' , title: 'Tour đã đặt' }) %>
+    <div class="page-head">
+        <h1>Tour đã đặt (<%= bookings.length %>)</h1>
+    </div>
+    <div class="filters">
+        <button type="button" class="btn btn-ghost on" data-filter="all">Tất cả</button>
+        <button type="button" class="btn btn-ghost" data-filter="upcoming">Sắp tới</button>
+        <button type="button" class="btn btn-ghost" data-filter="past">Đã qua</button>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <tr>
+                <th>Tour</th>
+                <th>Điểm đến</th>
+                <th>Ngày khởi hành</th>
+                <th>Thời lượng</th>
+                <th>Số người</th>
+                <th>Tổng tiền</th>
+                <th>Tiến độ</th>
+                <th>Trạng thái đơn</th>
+                <th></th>
+            </tr>
+            <% if (!bookings.length) { %>
+                <tr>
+                    <td colspan="9" class="empty">Bạn chưa đặt tour nào. <a href="/">Xem các tour đang mở bán</a></td>
+                </tr>
+                <% } %>
+                    <% bookings.forEach(b=> { %>
+                        <tr data-phase="<%= b.phase %>">
+                            <td><a href="/tours/<%= b.tour_id %>">
+                                    <%= b.tour_name %>
+                                </a></td>
+                            <td>
+                                <%= b.destination %>
+                            </td>
+                            <td class="nowrap">
+                                <%= b.travel_fmt || '—' %>
+                            </td>
+                            <td class="nowrap">
+                                <%= dur(b.days) %>
+                            </td>
+                            <td>
+                                <%= b.people %>
+                            </td>
+                            <td class="nowrap">
+                                <%= money(b.price * b.people) %>
+                            </td>
+                            <td><span class="badge <%= b.phase %>">
+                                    <%= phaseLabel[b.phase] %>
+                                </span></td>
+                            <td><span class="badge <%= b.status %>">
+                                    <%= bstatus[b.status] %>
+                                </span></td>
+                            <td>
+                                <% if (b.status==='pending' && b.phase==='upcoming' ) { %>
+                                    <form class="inline" method="post" action="/my-bookings/<%= b.id %>/cancel"
+                                        data-confirm="Hủy đơn đặt tour này?">
+                                        <button class="ic del" title="Hủy đơn">✖</button>
+                                    </form>
+                                    <% } %>
+                            </td>
+                        </tr>
+                        <% }) %>
+        </table>
+    </div>
+    <%- include('partials/foot') %>

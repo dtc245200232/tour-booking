@@ -1,19 +1,75 @@
-<%- include('partials/head') %>
-<h1><%= tour.name %></h1>
-<p>Điểm đến: <%= tour.destination %> | <%= tour.days %> ngày | Giá: <%= Number(tour.price).toLocaleString('vi-VN') %> đ</p>
-<h3>Lịch trình</h3>
-<p><%= tour.itinerary %></p>
-<a href="/tours/<%= tour.id %>/edit">Sửa</a>
-<form class="inline" method="post" action="/tours/<%= tour.id %>/delete" onsubmit="return confirm('Xóa tour này?')">
-  <button>Xóa</button>
-</form>
-<hr>
-<h3>Đặt tour</h3>
-<form method="post" action="/tours/<%= tour.id %>/book">
-  Họ tên <input name="full_name" required>
-  Email <input name="email" type="email" required>
-  Số điện thoại <input name="phone">
-  Số người <input name="people" type="number" min="1" value="1" required>
-  <button>Đặt tour</button>
-</form>
-<%- include('partials/foot') %>
+<%- include('partials/head', { active: user.role==='admin' ? 'tours' : 'dashboard' , title: tour.name }) %>
+  <% const steps=(tour.itinerary || '' ).split(/(?=Ngày \d+:)/).map(s=> s.trim()).filter(Boolean); %>
+    <p><a href="<%= user.role === 'admin' ? '/tours' : '/' %>">← Quay lại</a></p>
+    <div class="detail">
+      <div>
+        <h1>
+          <%= tour.name %>
+        </h1>
+        <div class="chips">
+          <span class="chip">
+            <%= code(tour.id) %>
+          </span>
+          <span class="chip">📍 <%= tour.destination %></span>
+          <span class="chip">🕒 <%= dur(tour.days) %></span>
+          <span class="chip">👥 Còn <%= tour.seats_left %> chỗ</span>
+          <span class="badge <%= tour.status %>">
+            <%= tour.status==='active' ? 'Active' : 'Inactive' %>
+          </span>
+        </div>
+        <div class="panel">
+          <h3>Lịch trình</h3>
+          <div class="timeline">
+            <% steps.forEach(s=> { const i = s.indexOf(':'); const ok = i > 0 && i < 12; %>
+                <div class="step">
+                  <strong>
+                    <%= ok ? s.slice(0, i) : 'Chi tiết' %>
+                  </strong>
+                  <p>
+                    <%= ok ? s.slice(i + 1).trim() : s %>
+                  </p>
+                </div>
+                <% }) %>
+          </div>
+        </div>
+      </div>
+
+      <aside class="panel">
+        <% if (user.role==='admin' ) { %>
+          <h3>Quản trị</h3>
+          <div class="meta">Giá / người</div>
+          <div class="price">
+            <%= money(tour.price) %>
+          </div>
+          <p class="notice" style="margin:14px 0">Quản trị viên chỉ theo dõi và quản lý tour, không đặt tour.</p>
+          <a class="btn btn-ghost btn-block" href="/tours/<%= tour.id %>/edit">✏️ Sửa tour</a>
+          <form method="post" action="/tours/<%= tour.id %>/delete"
+            data-confirm="Xóa tour này? Các đơn đặt của tour cũng bị xóa." style="margin-top:10px">
+            <button class="btn btn-block" style="background:var(--danger)">🗑 Xóa tour</button>
+          </form>
+          <% } else if (tour.status !=='active' || tour.seats_left < 1) { %>
+            <h3>Đặt tour</h3>
+            <p class="notice">
+              <%= tour.status !=='active' ? 'Tour tạm ngừng mở bán.' : 'Tour đã hết chỗ.' %>
+            </p>
+            <% } else { %>
+              <h3>Đặt tour</h3>
+              <div class="meta">Giá / người</div>
+              <div class="price">
+                <%= money(tour.price) %>
+              </div>
+              <form method="post" action="/tours/<%= tour.id %>/book" style="margin-top:14px">
+                <label>Họ tên</label><input name="full_name" value="<%= user.name %>" required>
+                <label>Email</label><input name="email" type="email" value="<%= user.email %>" required>
+                <label>Số điện thoại</label><input name="phone" value="<%= user.phone %>">
+                <label>Ngày khởi hành</label><input name="travel_date" type="date" min="<%= today %>" required>
+                <label>Số người</label><input id="people" name="people" type="number" min="1"
+                  max="<%= tour.seats_left %>" value="1" required>
+                <div class="meta">Tổng cộng</div>
+                <div class="total" id="total" data-price="<%= tour.price %>"></div>
+                <button class="btn btn-block">Đặt tour ngay</button>
+              </form>
+              <% } %>
+      </aside>
+    </div>
+    <%- include('partials/foot') %>
